@@ -3,6 +3,6 @@ package worker
 type Mode = string
 
 const (
-	ModeHost      = "host"
-	ModeContainer = "container"
+	ModeHost      Mode = "host"
+	ModeContainer Mode = "container"
 )
