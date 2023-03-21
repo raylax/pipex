@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "name": "pipex pipeline config",
+  "description": "pipex pipeline json schema",
+  "type": "object",
+  "definitions": {
+    "name": {
+      "oneOf": [
+        { "type": "string" },
+        { "type": "integer" }
+      ]
+    },
+    "task": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "$ref": "#/definitions/name"
+        },
+        "steps": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/step" }
+        }
+      }
+    },
+    "step": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "$ref": "#/definitions/name"
+        },
+        "sh": {
+          "$ref": "#/definitions/step_shell"
+        },
+        "bash": {
+          "$ref": "#/definitions/step_shell"
+        },
+        "cmd": {
+          "$ref": "#/definitions/step_shell"
+        },
+        "powershell": {
+          "$ref": "#/definitions/step_shell"
+        }
+      }
+    },
+    "step_shell": {
+      "oneOf": [
+        { "type": "string" },
+        { "type": "array", "items": { "type": "string" } }
+      ]
+    }
+  },
+  "properties": {
+    "name": {
+      "$ref": "#/definitions/name"
+    },
+    "tasks": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/task" }
+    }
+  }
+}

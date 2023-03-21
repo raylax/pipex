@@ -11,7 +11,7 @@ type StepDefine struct {
 	Timeout Timeout `yaml:"timeout"`
 
 	// 内建参数
-	Run StringArray `yaml:"run"`
+	Run StringArray `yaml:"run" builtin:":run,required"`
 }
 
 type JobDefine struct {

@@ -1,0 +1,19 @@
+name: Test CI
+
+tasks:
+  - name: 123
+    steps:
+      - name: "build"
+        sh: echo 1
+
+
+      - name: "build 2"
+        sh:
+          - echo 1
+          - echo 2
+
+      - name: build3
+        powershell:
+          - aaa
+        bash:
+          - aaa

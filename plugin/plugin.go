@@ -1,34 +1,32 @@
 package plugin
 
-import "github.com/raylax/pipex/worker"
+import "errors"
 
-type Type string
+type Type int
 
 const (
-	TypeLifecycle Type = "lifecycle"
-	TypeStep      Type = "step"
+	TypePipeline Type = 1 << 0
+	TypeTask     Type = 1 << 1
+	TypeStep     Type = 1 << 2
 )
 
-type Result struct {
-}
+var errorSkip = errors.New("skip")
 
 type Plugin interface {
 	ID() string
-	Init(ctx worker.JobContext) error
-	Destroy()
 }
 
-type LifecyclePlugin interface {
-	Plugin
-	OnJobInit(ctx *worker.JobContext) Result
-	OnStepInit(ctx *worker.JobContext) Result
-	OnStepCleanup(ctx *worker.JobContext) Result
-	OnJobCleanup(ctx *worker.JobContext) Result
+type PipelinePlugin interface {
+	OnExecute(ctx *PipelineContext) error
+	OnCleanup(ctx *PipelineContext) error
+}
+
+type TaskPlugin interface {
+	OnExecute(ctx *TaskContext) error
+	OnCleanup(ctx *TaskContext) error
 }
 
 type StepPlugin interface {
-	Plugin
-	OnInit(ctx *worker.JobContext) Result
-	OnRun(ctx *worker.JobContext) Result
-	OnCleanup(ctx *worker.JobContext) Result
+	OnExecute(ctx *StepContext) error
+	OnCleanup(ctx *StepContext) error
 }
