@@ -1,7 +1,9 @@
 package plugin
 
+import "github.com/raylax/pipex/core"
+
 type context struct {
-	Logger Logger
+	Logger core.Logger
 	Env    Env
 }
 

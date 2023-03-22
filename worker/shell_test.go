@@ -29,7 +29,7 @@ func runShellExecCases(t *testing.T, shell Shell) {
 
 	t.Run("echo", func(t *testing.T) {
 		var stdout bytes.Buffer
-		code, err := shell.Exec(context.Background(), []string{"sh", "-c", "echo -n hi pipex"}, &stdout, nil)
+		code, err := shell.Exec(context.Background(), []string{"bash", "-c", "echo -n hi pipex"}, &stdout, nil)
 		if stdout.String() != "hi pipex" {
 			t.Logf("code:%v err:%v", code, err)
 			t.Error(stdout.String())
@@ -38,7 +38,7 @@ func runShellExecCases(t *testing.T, shell Shell) {
 
 	t.Run("sleep echo", func(t *testing.T) {
 		var stdout bytes.Buffer
-		code, err := shell.Exec(context.Background(), []string{"sh", "-c", "sleep 1 && echo -n hi pipex"}, &stdout, nil)
+		code, err := shell.Exec(context.Background(), []string{"bash", "-c", "sleep 1 && echo -n hi pipex"}, &stdout, nil)
 		if stdout.String() != "hi pipex" {
 			t.Logf("code:%v err:%v", code, err)
 			t.Error(stdout.String())
@@ -47,7 +47,7 @@ func runShellExecCases(t *testing.T, shell Shell) {
 
 	t.Run("echo stderr", func(t *testing.T) {
 		var stderr bytes.Buffer
-		code, err := shell.Exec(context.Background(), []string{"sh", "-c", "echo -n hi pipex >&2"}, nil, &stderr)
+		code, err := shell.Exec(context.Background(), []string{"bash", "-c", "echo -n hi pipex >&2"}, nil, &stderr)
 		if stderr.String() != "hi pipex" {
 			t.Logf("code:%v err:%v", code, err)
 			t.Error(stderr.String())
