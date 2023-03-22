@@ -10,11 +10,20 @@ type StepDefine struct {
 	Name    string  `yaml:"name"`
 	Timeout Timeout `yaml:"timeout"`
 
-	// 内建参数
-	Run StringArray `yaml:"run" builtin:":run,required"`
+	Checkout string `yaml:"checkout" builtin:"checkout"`
+
+	// 内建参数 - run
+	Sh         StringArray `yaml:"sh" builtin:":run"`
+	Bash       StringArray `yaml:"bash" builtin:":run"`
+	Cmd        StringArray `yaml:"cmd" builtin:":run"`
+	Powershell StringArray `yaml:"powershell" builtin:":run"`
+
+	// 插件
+	Use  string            `yaml:"use"`
+	With map[string]string `yaml:"with"`
 }
 
-type JobDefine struct {
+type TaskDefine struct {
 	Name      string       `yaml:"name"`
 	Steps     []StepDefine `yaml:"steps"`
 	When      string       `yaml:"when"`      // When expression
@@ -22,22 +31,30 @@ type JobDefine struct {
 	Timeout   Timeout      `yaml:"timeout"`
 }
 
-type ConfigDefine struct {
+type PipelineDefine struct {
 	Name string `yaml:"name"`
 }
 
 func (a *StringArray) UnmarshalYAML(value *yaml.Node) error {
-	var multi []string
+	arr, err := unmarshalYAMLArray[string](value)
+	if err != nil {
+		return err
+	}
+	*a = arr
+	return nil
+}
+
+func unmarshalYAMLArray[T any](value *yaml.Node) ([]T, error) {
+	var multi []T
 	err := value.Decode(&multi)
 	if err != nil {
-		var single string
+		var single T
 		err := value.Decode(&single)
 		if err != nil {
-			return err
+			return nil, err
 		}
-		*a = []string{single}
+		return []T{single}, nil
 	} else {
-		*a = multi
+		return multi, nil
 	}
-	return nil
 }

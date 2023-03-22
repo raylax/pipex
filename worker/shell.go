@@ -10,15 +10,15 @@ import (
 )
 
 type Shell interface {
-	Exec(ctx context.Context, command string, stdout io.Writer, stderr io.Writer) (code int, err error)
+	Exec(ctx context.Context, command []string, stdout io.Writer, stderr io.Writer) (code int, err error)
 	Destroy()
 }
 
 type ShellHost struct {
 }
 
-func (s *ShellHost) Exec(ctx context.Context, command string, stdout io.Writer, stderr io.Writer) (code int, err error) {
-	cmd := exec.CommandContext(ctx, "bash", "-c", command)
+func (s *ShellHost) Exec(ctx context.Context, command []string, stdout io.Writer, stderr io.Writer) (code int, err error) {
+	cmd := exec.CommandContext(ctx, command[0], command[1:]...)
 
 	if stdout != nil {
 		cmd.Stdout = stdout
@@ -49,12 +49,12 @@ type ShellContainer struct {
 	containerId string
 }
 
-func (s *ShellContainer) Exec(ctx context.Context, command string, stdout io.Writer, stderr io.Writer) (code int, err error) {
+func (s *ShellContainer) Exec(ctx context.Context, command []string, stdout io.Writer, stderr io.Writer) (code int, err error) {
 
 	createResponse, err := s.client.ContainerExecCreate(ctx, s.containerId, types.ExecConfig{
 		AttachStderr: true,
 		AttachStdout: true,
-		Cmd:          []string{"sh", "-c", command},
+		Cmd:          command,
 	})
 	if err != nil {
 		return

@@ -1,27 +1,11 @@
 package worker
 
-type StepType int
+import "errors"
 
-type StepResult int
+var errorStepSkip = errors.New("STEP SKIP")
 
-const (
-	StepResultSkip StepResult = iota
-	StepResultHandle
-)
-
-const (
-	StepTypeBuiltin StepType = iota
-	StepTypePlugin
-)
-
-type BuiltinStep interface {
+type Step interface {
 	Id() string
-	Run(ctx *JobContext) error
-	Cleanup(ctx *JobContext) StepResult
-}
-
-type Step struct {
-	Type   StepType
-	Name   string
-	Define StepDefine
+	Execute(ctx *StepContext) error
+	Cleanup(ctx *StepContext) error
 }
