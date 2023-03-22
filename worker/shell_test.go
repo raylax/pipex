@@ -15,7 +15,7 @@ func TestShellContainer_Exec(t *testing.T) {
 	}
 	shell := &ShellContainer{
 		client:      cli,
-		containerId: "e773a0876ea2",
+		containerId: "redis",
 	}
 	runShellExecCases(t, shell)
 }
